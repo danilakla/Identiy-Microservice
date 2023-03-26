@@ -158,7 +158,7 @@ namespace Identiy_API.Controllers;
 
         var token = new JwtSecurityToken(
        
-            expires: DateTime.Now.AddHours(3),
+            expires: DateTime.Now.AddHours(1000),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
