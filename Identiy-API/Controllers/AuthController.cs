@@ -75,9 +75,11 @@ namespace Identiy_API.Controllers;
         {
             Email = model.Username,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Username,
+            UserName = model.Username
         };
+
         var result = await _userManager.CreateAsync(user, model.Password);
+
         if (!result.Succeeded)
             return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
         var authClaims = new List<Claim>
@@ -105,7 +107,10 @@ namespace Identiy_API.Controllers;
 
     [Authorize]
     public async Task<IActionResult> test()
+
+
     {
+  
         return Ok("Dsddsdsd");
     }
 
@@ -116,6 +121,8 @@ namespace Identiy_API.Controllers;
 
     public async Task<IActionResult> norm()
     {
+        var user = await _userManager.FindByIdAsync("1b94b97f-3f9e-46e1-b020-481723efef21");
+        await _userManager.AddClaimAsync(user, new Claim("one more test", "value test"));
         return Ok("21421421");
     }
     //[HttpPost]
