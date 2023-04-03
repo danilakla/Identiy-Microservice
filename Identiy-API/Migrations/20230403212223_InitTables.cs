@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Identiy_API.Migrations
 {
-    public partial class inittable : Migration
+    public partial class InitTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

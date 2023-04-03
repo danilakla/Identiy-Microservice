@@ -7,14 +7,40 @@ namespace Identiy_API.Services.RegistrationService
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IConfiguration configuration;
 
         public RegistrationService(UserManager<IdentityUser> userManager,
-        RoleManager<IdentityRole> roleManager)
+        RoleManager<IdentityRole> roleManager,
+        IConfiguration configuration)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.configuration = configuration;
         }
 
+        public async Task<bool> IsRegistration(string email)
+        {
+            try
+            {
+
+                var result = await userManager.FindByEmailAsync(email);
+
+                if (result is not null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+                
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task RegistrationManager(CreateManagerDTO createManagerDTO)
         {
@@ -22,22 +48,23 @@ namespace Identiy_API.Services.RegistrationService
             {
 
 
-                var isFind =await userManager.FindByEmailAsync(createManagerDTO.Email);
-                if (isFind is not null)
-                {
-                    throw new Exception("User is exist");
-                }
+    
 
-                IdentityUser user = new() { UserName=createManagerDTO.Name+createManagerDTO.LastName, Email=createManagerDTO.Email};
+                IdentityUser user = new() { UserName=createManagerDTO.Name,Email=createManagerDTO.Email};
 
+                
                 var userSaved=await userManager.CreateAsync(user,createManagerDTO.Password);
+                if (!userSaved.Succeeded)
+                {
+                    throw new Exception( "401");
+                }
 
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             
         }

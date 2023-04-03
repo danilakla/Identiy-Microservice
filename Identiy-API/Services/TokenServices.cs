@@ -1,4 +1,5 @@
 ﻿using Identiy_API.Model;
+using Identiy_API.Model.Payload;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,54 +22,66 @@ namespace Identiy_API.Services
         {
             _configuration = configuration;
         }
-        public string GetAccessToken(IdentityUser payload,string Role)
-        {
-            var authClaims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, payload.UserName),
-                    new Claim(ClaimTypes.Role, Role),
 
+        public string GetAccessTokenManager(ManagerPayload payload)
+        {
+            try
+            {
+                var ManagerClaim = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, payload.Role),
+                    new Claim("UniversityId",payload.payloadManagerDTO.UniversityId.ToString()),
+                    new Claim("ManagerId", payload.payloadManagerDTO.ManagerId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+                var token = GenerateToken(ManagerClaim, 100);
+                var accToken = new JwtSecurityTokenHandler().WriteToken(token);
+                return accToken;
+            }
+            catch (Exception)
+            {
 
-            return "";
-
-        }
-
-        public string GetAccessTokenManager(CreateManagerDTO payload, string Role)
-        {
-            var ManagerClaim = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, payload.Name+" "+payload.LastName),
-                    new Claim(ClaimTypes.Role, Role),
-                    new Claim(ClaimTypes.Role, Role),
-
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-            ManagerClaim.Where(e => e.Type == "ds");
-
-            throw new NotImplementedException();
+                throw;
+            }
+         
         }
 
   
 
-        public string GetRefreshTokenManager(CreateManagerDTO payload)
+        public string GetRefreshTokenManager(ManagerPayload payload)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return GetAccessTokenManager(payload);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private JwtSecurityToken GenerateToken(List<Claim> authClaims,int timeLives)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
+            try
+            {
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:Token"]));
 
-            var token = new JwtSecurityToken(
+                var token = new JwtSecurityToken(
 
-                expires: DateTime.Now.AddHours(timeLives),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
+                    expires: DateTime.Now.AddHours(timeLives),
+                    claims: authClaims,
+                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    );
 
-            return token;
+                return token;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
     }
 }

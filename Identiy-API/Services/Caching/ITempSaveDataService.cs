@@ -6,7 +6,6 @@ namespace Identiy_API.Services.Caching
     {
         Task SaveManger(CreateManagerDTO createManagerDTO, string tokenConfirmEmail);
 
-        Task<bool> FindUser(string tokenConfirmEmail);
         Task<CreateManagerDTO> GetManager(string tokenConfirmEmail);
 
     }

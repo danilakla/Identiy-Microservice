@@ -22,7 +22,6 @@ namespace Identiy_API.Controllers
             try
             {
 
-
                 await tempRegistrationService.RegistrationManager(createManagerDTO);
 
                 return Ok();

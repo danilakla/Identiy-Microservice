@@ -13,11 +13,11 @@ namespace Identiy_API.Services.Caching
             this.distributedCache = distributedCache;
         }
 
-        public async Task<bool> FindUser(string key)
+        private async Task<bool> FindUser(string key)
         {
             try
             {
-                var userStr=await this.distributedCache.GetStringAsync(key);
+                var userStr = await this.distributedCache.GetStringAsync(key);
                 bool isHas = string.IsNullOrEmpty(userStr) ? false : true;
                 return isHas;
             }
@@ -32,8 +32,11 @@ namespace Identiy_API.Services.Caching
         {
             try
             {
-           var userStr= await distributedCache.GetStringAsync(key);
-                var userObj=JsonConvert.DeserializeObject<CreateManagerDTO>(userStr);
+
+                var isFind = await FindUser(key);
+                if (!isFind) throw new Exception("user isn't exist");
+                var userStr = await distributedCache.GetStringAsync(key);
+                var userObj = JsonConvert.DeserializeObject<CreateManagerDTO>(userStr);
                 return userObj;
             }
             catch (Exception)
@@ -44,7 +47,7 @@ namespace Identiy_API.Services.Caching
 
         }
 
-        public async Task SaveManger(CreateManagerDTO createManagerDTO,string key)
+        public async Task SaveManger(CreateManagerDTO createManagerDTO, string key)
         {
             try
             {

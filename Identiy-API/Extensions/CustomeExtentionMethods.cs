@@ -2,7 +2,11 @@
 using Identiy_API.Services.CryptograthyService;
 using Identiy_API.Services.MailService;
 using Identiy_API.Services.TempSavingService;
+using Identiy_API.Services.UniversityService;
 using Identiy_API.Utils;
+using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Bcpg;
+using UniversityApi.Protos;
 
 namespace Identiy_API.Extensions
 {
@@ -18,5 +22,20 @@ namespace Identiy_API.Extensions
 
             return services;
         }
+
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IUniversityService, UniversityService>();
+
+            services.AddGrpcClient<University.UniversityClient>((services, options) =>
+            {
+                var universityApi = configuration["AppSettings:Grpc:UniversityApi"];
+                options.Address = new Uri(universityApi);
+            });
+
+
+            return services;
+        }
+
     }
 }
