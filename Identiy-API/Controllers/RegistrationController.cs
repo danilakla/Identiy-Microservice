@@ -1,4 +1,5 @@
-﻿using Identiy_API.Model;
+﻿using Identiy_API.DTO;
+using Identiy_API.Model;
 using Identiy_API.Services.TempSavingService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,30 @@ namespace Identiy_API.Controllers
             this.tempRegistrationService = tempRegistrationService;
         }
 
-        [HttpPost("/registr-user/temp-saving")]
-        public async Task<IActionResult>  TempRegistrationUser([FromBody] CreateManagerDTO createManagerDTO)
+        [HttpPost("/registr-manager/temp-saving")]
+        public async Task<IActionResult>  TempRegistrationManager([FromBody] CreateManagerDTO registrationUserDTO)
         {
             try
             {
 
-                await tempRegistrationService.RegistrationManager(createManagerDTO);
+                await tempRegistrationService.TempRegistration<CreateManagerDTO>(registrationUserDTO);
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost("/registr-user/temp-saving")]
+        public async Task<IActionResult> TempRegistrationDean([FromBody] RegistrationUserDTO registratioUserDTO)
+        {
+            try
+            {
+
+                await tempRegistrationService.TempRegistration<RegistrationUserDTO>(registratioUserDTO);
 
                 return Ok();
             }

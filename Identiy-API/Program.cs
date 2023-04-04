@@ -38,7 +38,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddDataProtection();
+builder.Services.AddDataProtection().SetApplicationName("Chat")
+            .AddKeyManagementOptions(options =>
+            {
+                options.AutoGenerateKeys = false;
+            });
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

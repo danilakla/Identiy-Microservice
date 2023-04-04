@@ -4,6 +4,6 @@ namespace Identiy_API.Services.TempSavingService
 {
     public interface ITempRegistrationService
     {
-        Task RegistrationManager(CreateManagerDTO createManagerDTO);
+        Task TempRegistration<T>(T createManagerDTO) where T : LoginDTO;
     }
 }

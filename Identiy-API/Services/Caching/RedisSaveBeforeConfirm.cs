@@ -28,7 +28,7 @@ namespace Identiy_API.Services.Caching
             }
         }
 
-        public async Task<CreateManagerDTO> GetManager(string key)
+        public async Task<T> GetData<T>(string key)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Identiy_API.Services.Caching
                 var isFind = await FindUser(key);
                 if (!isFind) throw new Exception("user isn't exist");
                 var userStr = await distributedCache.GetStringAsync(key);
-                var userObj = JsonConvert.DeserializeObject<CreateManagerDTO>(userStr);
+                var userObj = JsonConvert.DeserializeObject<T>(userStr);
                 return userObj;
             }
             catch (Exception)
@@ -47,7 +47,7 @@ namespace Identiy_API.Services.Caching
 
         }
 
-        public async Task SaveManger(CreateManagerDTO createManagerDTO, string key)
+        public async Task SaveData<T>(T createManagerDTO, string key)
         {
             try
             {

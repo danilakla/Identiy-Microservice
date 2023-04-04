@@ -23,15 +23,14 @@ namespace Identiy_API.Services.TempSavingService
             this.mailService = mailService;
             this.mailMessage = mailMessage;
         }
-        public async Task RegistrationManager(CreateManagerDTO createManagerDTO)
+        public async Task TempRegistration<T>(T UserDto) where T: LoginDTO
         {
             try
             {
-                var resu = crypto.DecryptSecretString<CreateManagerDTO>("CfDJ8MGeCBcQHChAowWjUXVynooVQ0hLXZ0V_mUXuGKo3Ibz7ltMSwMjVo1HUvcVaOyv0aBH0gLhloqapjQaNlFKwQqyqk4neN-M6bh5p_c0ci5qlNFs1YShM1ellTw9jmGjQ1req3elJO-Z1LJEvzTr66uiPR4IOe6hDj1l9qsxgB9LFKHommSw9XAp46HkdVw4xg-7pQhmqFmHtX15yBrRKQ_Dv5sW1KyU0OR3fatq7FwJjYI-tGtcipT6nucWo38EU9_jmlotsIl80K1abgm32GSbPJHEl51wg2PXPBLamkeF9zeOoGbN8qFzf3wFwBIwRw");
-                var secretKey=crypto.EncryptSecretString(createManagerDTO);
-            
-                await tempSaveDataService.SaveManger(createManagerDTO,secretKey);
-                var emailMessage = new EmailDto { To = createManagerDTO.Email, Subject = "Confirm email", Body = mailMessage.BodyHtml(secretKey) };
+                var secretKey=crypto.EncryptSecretString(UserDto);
+            bool flag= typeof(T)==typeof(CreateManagerDTO)?true:false;
+                await tempSaveDataService.SaveData(UserDto, secretKey);
+                var emailMessage = new EmailDto { To = UserDto.Email, Subject = "Confirm email", Body = mailMessage.BodyHtml(secretKey, flag) };
                 mailService.SendEmail(emailMessage);
                 
             }

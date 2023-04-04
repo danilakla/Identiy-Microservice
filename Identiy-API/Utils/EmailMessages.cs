@@ -8,9 +8,10 @@
         {
             this.configuration = configuration;
         }
-        public string BodyHtml(string msg)
+        public string BodyHtml(string msg,bool flagRole)
         {
-            string url = $"{configuration["AppSettings:ApiUrlEmailConfirm"]}{msg}";
+            var res = flagRole ? configuration["AppSettings:ApiUrlEmailConfirmManager"] : configuration["AppSettings:ApiUrlEmailConfirmUser"];
+            string url = $"{res}{msg}";
             var bodyHTML = $"pls click to link <a href='{url}'>confirm email</a>";
             return bodyHTML;
         }

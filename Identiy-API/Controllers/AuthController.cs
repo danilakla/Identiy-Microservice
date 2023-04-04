@@ -55,7 +55,6 @@ namespace Identiy_API.Controllers;
             }) ;
 
 
-            return Ok();
         }
         catch (Exception)
         {
@@ -64,4 +63,39 @@ namespace Identiy_API.Controllers;
         }
     }
 
+    [HttpPost("/login-dean")]
+    public async Task<IActionResult> LoginDean(LoginDTO loginDTO)
+    {
+        try
+        {
+
+            var user = await authenticationService.LoginManager(loginDTO);
+            var ManagerIds = await universityService.GetManagerData(loginDTO);
+            var managerPayload = new ManagerPayload { payloadManagerDTO = ManagerIds, Role = "Manager" };
+            var accessToken = tokenServices.GetAccessTokenManager(managerPayload);
+            var refreshToken = tokenServices.GetRefreshTokenManager(managerPayload);
+            await authenticationService.SetRefreshToken(user, refreshToken);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            return Ok(new
+            {
+                Token = accessToken,
+                UserEmail = user.Email,
+            });
+
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
+
+}

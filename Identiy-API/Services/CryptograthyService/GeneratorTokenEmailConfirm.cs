@@ -34,7 +34,7 @@ namespace Identiy_API.Services.CryptograthyService
 
                 throw;
             }
-        }
+            }
         
         public T DecryptSecretString<T>(string secretStirng)
         {

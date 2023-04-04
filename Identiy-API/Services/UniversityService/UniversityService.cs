@@ -1,4 +1,5 @@
 ﻿using Identiy_API.Model;
+using Identiy_API.Model.GrpcModel;
 using UniversityApi.Protos;
 using University = UniversityApi.Protos.University;
 
@@ -78,6 +79,11 @@ namespace Identiy_API.Services.UniversityService
                  Address=createManagerDTO.University.Address}
             
             };
+        }
+
+        public Task<DeanPayload> InitDean(DeanInitDTO deanInitDTO)
+        {
+            throw new NotImplementedException();
         }
     }
 }

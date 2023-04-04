@@ -34,6 +34,15 @@ namespace Identiy_API.Extensions
             });
 
 
+            services.AddScoped<IDeanService, DeanService>();
+
+            services.AddGrpcClient<Dean.DeanClient>((services, options) =>
+            {
+                var universityApi = configuration["AppSettings:Grpc:UniversityApi"];
+                options.Address = new Uri(universityApi);   
+            });
+
+
             return services;
         }
 

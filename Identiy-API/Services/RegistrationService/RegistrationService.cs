@@ -42,7 +42,7 @@ namespace Identiy_API.Services.RegistrationService
             }
         }
 
-        public async Task RegistrationManager(CreateManagerDTO createManagerDTO)
+        public async Task Registration<T>(T createManagerDTO) where T : LoginDTO
         {
             try
             {

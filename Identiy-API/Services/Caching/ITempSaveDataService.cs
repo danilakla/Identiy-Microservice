@@ -4,9 +4,9 @@ namespace Identiy_API.Services.Caching
 {
     public interface ITempSaveDataService
     {
-        Task SaveManger(CreateManagerDTO createManagerDTO, string tokenConfirmEmail);
+        Task SaveData<T>(T createManagerDTO, string tokenConfirmEmail);
 
-        Task<CreateManagerDTO> GetManager(string tokenConfirmEmail);
+        Task<T> GetData<T>(string tokenConfirmEmail);
 
     }
 }

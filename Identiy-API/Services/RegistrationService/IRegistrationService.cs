@@ -4,7 +4,7 @@ namespace Identiy_API.Services.RegistrationService
 {
     public interface IRegistrationService
     {
-        Task RegistrationManager(CreateManagerDTO createManagerDTO);
+        Task Registration<T>(T createManagerDTO)where T: LoginDTO;
         Task<bool> IsRegistration(string email);
     }
 }
