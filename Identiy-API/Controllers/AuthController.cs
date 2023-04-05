@@ -20,12 +20,14 @@ namespace Identiy_API.Controllers;
     private readonly IAuthenticationService authenticationService;
     private readonly ITokenServices tokenServices;
     private readonly IUniversityService universityService;
+    private readonly IDeanService deanService;
 
-    public AuthenticationController(IAuthenticationService authenticationService, ITokenServices tokenServices, IUniversityService universityService)
+    public AuthenticationController(IAuthenticationService authenticationService, ITokenServices tokenServices, IUniversityService universityService, IDeanService deanService)
     {
         this.authenticationService = authenticationService;
         this.tokenServices = tokenServices;
         this.universityService = universityService;
+        this.deanService = deanService;
     }
 
     [HttpPost("/login-manager")]
@@ -34,7 +36,7 @@ namespace Identiy_API.Controllers;
         try
         {
 
-            var user=await authenticationService.LoginManager(loginDTO);
+            var user=await authenticationService.Login(loginDTO);
             var ManagerIds=await universityService.GetManagerData(loginDTO);
             var managerPayload = new ManagerPayload { payloadManagerDTO = ManagerIds, Role = "Manager" };
             var accessToken = tokenServices.GetAccessTokenManager(managerPayload);
@@ -62,18 +64,23 @@ namespace Identiy_API.Controllers;
             throw;
         }
     }
+    [Authorize]
+    [HttpGet("/login-deanTEST")]
+    public IActionResult TEST()
+    {
 
+        return Ok();
+    }
     [HttpPost("/login-dean")]
     public async Task<IActionResult> LoginDean(LoginDTO loginDTO)
     {
         try
         {
 
-            var user = await authenticationService.LoginManager(loginDTO);
-            var ManagerIds = await universityService.GetManagerData(loginDTO);
-            var managerPayload = new ManagerPayload { payloadManagerDTO = ManagerIds, Role = "Manager" };
-            var accessToken = tokenServices.GetAccessTokenManager(managerPayload);
-            var refreshToken = tokenServices.GetRefreshTokenManager(managerPayload);
+            var user = await authenticationService.Login(loginDTO);
+            var ManagerIds = await deanService.GetDeanData(loginDTO);
+             var accessToken = tokenServices.GetRefreshTokenDean(ManagerIds);
+            var refreshToken = tokenServices.GetRefreshTokenDean(ManagerIds);
             await authenticationService.SetRefreshToken(user, refreshToken);
 
             var cookieOptions = new CookieOptions

@@ -79,10 +79,12 @@ namespace Identiy_API.Controllers
             {
 
                 var deanData = await tempSaveDataService.GetData<RegistrationUserDTO>(token);
+                
 
                 var hasAccount = await registrationService.IsRegistration(deanData.Email);
              
                 var data=crypto.DecryptSecretString<DeanTokenRegistraion>(deanData.AuthenticationToken);
+                if (data.Role != "Dean") throw new Exception("Is not correct rolle");
                 if (hasAccount)
                 {
                     throw new Exception("User had account");

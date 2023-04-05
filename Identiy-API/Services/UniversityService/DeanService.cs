@@ -1,5 +1,6 @@
 ﻿using Identiy_API.Model;
 using Identiy_API.Model.GrpcModel;
+using Org.BouncyCastle.Ocsp;
 using UniversityApi.Protos;
 
 namespace Identiy_API.Services.UniversityService
@@ -14,8 +15,18 @@ namespace Identiy_API.Services.UniversityService
         }
         public async Task<DeanPayload> GetDeanData(LoginDTO loginDTO)
         {
-                throw new NotImplementedException();
+            try
+            {
+                var response = await deanClient.GetDeanInfoAsync(new EmailDean { Email = loginDTO.Email });
+                
+                return new DeanPayload {  DeanId= response.DeanId,  FacultieId=response.FacultieId, UniversityId=response.UniversityId  };
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+          
         }
 
         public async Task<DeanPayload> InitDean(DeanInitDTO deanInitDTO)

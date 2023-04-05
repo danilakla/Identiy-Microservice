@@ -6,7 +6,7 @@ namespace Identiy_API.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<IdentityUser> LoginManager(LoginDTO createManagerDTO);
+        Task<IdentityUser> Login(LoginDTO createManagerDTO);
         Task SetRefreshToken(IdentityUser user, string refreshToken);
     }
 }

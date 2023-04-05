@@ -1,4 +1,5 @@
 ﻿using Identiy_API.Model;
+using Identiy_API.Model.GrpcModel;
 using Identiy_API.Model.Payload;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,7 @@ namespace Identiy_API.Services
 {
     public class TokenServices : ITokenServices
     {
-
+        readonly private int LIFE_TIME_TOKEN_HOUR = 100;//develop value
 
 
 
@@ -21,6 +22,28 @@ namespace Identiy_API.Services
             IConfiguration configuration)
         {
             _configuration = configuration;
+        }
+
+        public string GetAccessTokenDean(DeanPayload payload)
+        {
+            try
+            {
+                var DeanPayload = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, "Dean"),
+                    new Claim("UniversityId", payload.UniversityId.ToString()),
+                    new Claim("DeanId", payload.DeanId.ToString()),
+                    new Claim("Facuiltie", payload.FacultieId.ToString()),
+
+                };
+                var token = new JwtSecurityTokenHandler().WriteToken(GenerateToken(DeanPayload, LIFE_TIME_TOKEN_HOUR));
+                return token;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public string GetAccessTokenManager(ManagerPayload payload)
@@ -34,19 +57,22 @@ namespace Identiy_API.Services
                     new Claim("ManagerId", payload.payloadManagerDTO.ManagerId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-                var token = GenerateToken(ManagerClaim, 100);
+                var token = GenerateToken(ManagerClaim, LIFE_TIME_TOKEN_HOUR);
                 var accToken = new JwtSecurityTokenHandler().WriteToken(token);
                 return accToken;
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
          
         }
 
-  
+        public string GetRefreshTokenDean(DeanPayload payload)
+        {
+            return GetAccessTokenDean(payload);
+        }
 
         public string GetRefreshTokenManager(ManagerPayload payload)
         {

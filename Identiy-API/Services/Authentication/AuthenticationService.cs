@@ -16,7 +16,7 @@ namespace Identiy_API.Services.Authentication
         }
 
     
-        public async Task<IdentityUser> LoginManager(LoginDTO createManagerDTO)
+        public async Task<IdentityUser> Login(LoginDTO createManagerDTO)
         {
             try
             {
