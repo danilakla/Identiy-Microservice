@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identiy_API.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230310184440_init-table")]
-    partial class inittable
+    [Migration("20230403212223_InitTables")]
+    partial class InitTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

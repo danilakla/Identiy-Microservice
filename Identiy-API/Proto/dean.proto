@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option csharp_namespace = "UniversityApi.Protos";
+package UniversityApi;
+
+service Dean{
+	rpc InitDean (DeanRequest)  returns (DeanResponse);
+	rpc GetDeanInfo (EmailDean) returns (DeanResponse);
+
+}
+
+
+message DeanRequest{
+	string name=1;
+	string last_name=2;
+	string email=3;
+	DeanIds deansId=4;
+}
+message DeanIds{
+	int32 university_id=1;
+	int32 facultie_id=2;
+}
+
+
+message EmailDean{
+	string email=1;
+}
+
+message DeanResponse{	
+int32 dean_id=1;
+int32 university_id=2;
+int32 facultie_id=3;
+
+}
+
+
