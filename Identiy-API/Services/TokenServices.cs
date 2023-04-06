@@ -69,6 +69,7 @@ namespace Identiy_API.Services
          
         }
 
+
         public string GetRefreshTokenDean(DeanPayload payload)
         {
             return GetAccessTokenDean(payload);
@@ -87,6 +88,33 @@ namespace Identiy_API.Services
             }
         }
 
+        public string GetRefreshTokenTeacher(TeacherPayload payload)
+        {
+            return GetAccessTokenTeacher(payload);
+        }
+
+
+        public string GetAccessTokenTeacher(TeacherPayload payload)
+        {
+            try
+            {
+                var ManagerClaim = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, "Teacher"),
+                    new Claim("UniversityId",payload.UniversityId.ToString()),
+                    new Claim("TeacherId", payload.TeacherId.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+                var token = GenerateToken(ManagerClaim, LIFE_TIME_TOKEN_HOUR);
+                var accToken = new JwtSecurityTokenHandler().WriteToken(token);
+                return accToken;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
         private JwtSecurityToken GenerateToken(List<Claim> authClaims,int timeLives)
         {
             try

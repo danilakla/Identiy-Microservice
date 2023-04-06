@@ -10,5 +10,9 @@ namespace Identiy_API.Services.UniversityService
         Task<PayloadManagerDTO> GetManagerData(LoginDTO loginDTO);
 
 
+        Task<TeacherPayload> InitTeacher(TeacherInitDto  teacherInitDto);
+        Task<TeacherPayload> GetTeacherData( string email);
+
+
     }
 }

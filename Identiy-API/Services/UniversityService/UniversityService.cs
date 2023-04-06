@@ -23,10 +23,11 @@ namespace Identiy_API.Services.UniversityService
                 var managerPayload = MapToResponsetManager(response);
                 return managerPayload; 
             }
-            catch (Exception)
+            catch (Exception e )
             {
+                Console.WriteLine(e.Message);
 
-                throw;
+                throw e;
             }
           
         }
@@ -81,9 +82,57 @@ namespace Identiy_API.Services.UniversityService
             };
         }
 
-        public Task<DeanPayload> InitDean(DeanInitDTO deanInitDTO)
+    
+
+        public async Task<TeacherPayload> InitTeacher(TeacherInitDto teacherInitDto)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                var request = MapToRequestInitTeacher(teacherInitDto);
+                var response = await universityClient.InitTeacherAsync(request);
+                var  teacherPayload = MapResponseToTeacherPayload(response);
+
+                return teacherPayload;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
+        public async Task<TeacherPayload> GetTeacherData(string email)
+        {
+            try
+            {
+                var request = new Email { Email_=email };
+                var response = await universityClient.GetTeacherInfoAsync(request);
+                var payload= MapResponseToTeacherPayload(response);
+                return payload;
+            }
+
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        private TeacherPayload MapResponseToTeacherPayload(TeacherResponse response)
+        {
+            var teacherPayload = new TeacherPayload { UniversityId = response.UniversityId, TeacherId = response.TeacherId };
+return teacherPayload;
+        }
+        private TeacherRequest MapToRequestInitTeacher(TeacherInitDto teacherInitDto)
+        {
+            return new TeacherRequest
+            {
+                Email = teacherInitDto.loginDTO.Email,
+                LastName = teacherInitDto.loginDTO.LastName,
+                Name=teacherInitDto.loginDTO.Name,
+                UniversityId=teacherInitDto.UniversityId,
+            };
+        }
+
+  
     }
 }

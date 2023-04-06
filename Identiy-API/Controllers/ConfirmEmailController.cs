@@ -56,7 +56,6 @@ namespace Identiy_API.Controllers
                 await registrationService.Registration(manager);
 
                 var userIds =await universityService.InitUniversity(manager);
-                var payload = new ManagerPayload { payloadManagerDTO = userIds, Role = "Manager" };
 
 
                 return Redirect("https://www.youtube.com/");
@@ -84,7 +83,7 @@ namespace Identiy_API.Controllers
                 var hasAccount = await registrationService.IsRegistration(deanData.Email);
              
                 var data=crypto.DecryptSecretString<DeanTokenRegistraion>(deanData.AuthenticationToken);
-                if (data.Role != "Dean") throw new Exception("Is not correct rolle");
+                if (data.Role != "Dean") throw new Exception("Is not correct role");
                 if (hasAccount)
                 {
                     throw new Exception("User had account");
@@ -92,6 +91,40 @@ namespace Identiy_API.Controllers
                 await registrationService.Registration(deanData);
 
                 var userIds = await deanService.InitDean(new (){  DeanTokenRegistraion=data, loginDTO=deanData});
+
+
+                return Redirect("https://www.youtube.com/");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        [HttpGet("teacher/{token}")]
+        public async Task<IActionResult> ConfirmTeacher(string token)
+        {
+
+            try
+            {
+
+                var teacherData = await tempSaveDataService.GetData<RegistrationUserDTO>(token);
+
+
+                var hasAccount = await registrationService.IsRegistration(teacherData.Email);
+
+                var data = crypto.DecryptSecretString<TeacherTokenRegistration>(teacherData.AuthenticationToken);
+                if (data.Role != "Teacher") throw new Exception("Is not correct role");
+                if (hasAccount)
+                {
+                    throw new Exception("User had account");
+                }
+                await registrationService.Registration(teacherData);
+
+               var userIds = await  universityService.InitTeacher(new() { loginDTO = teacherData, UniversityId=data.UniversityId});
 
 
                 return Redirect("https://www.youtube.com/");

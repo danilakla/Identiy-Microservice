@@ -23,7 +23,7 @@ namespace Identiy_API.Controllers
             try
             {
 
-                await tempRegistrationService.TempRegistration<CreateManagerDTO>(registrationUserDTO);
+                await tempRegistrationService.TempRegistration<CreateManagerDTO>(registrationUserDTO,registrationUserDTO.Role);
 
                 return Ok();
             }
@@ -40,7 +40,7 @@ namespace Identiy_API.Controllers
             try
             {
 
-                await tempRegistrationService.TempRegistration<RegistrationUserDTO>(registratioUserDTO);
+                await tempRegistrationService.TempRegistration<RegistrationUserDTO>(registratioUserDTO, registratioUserDTO.Role);
 
                 return Ok();
             }
