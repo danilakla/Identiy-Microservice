@@ -12,5 +12,8 @@ namespace Identiy_API.Services
 
         string GetAccessTokenDean(DeanPayload payload);
         string GetRefreshTokenDean(DeanPayload payload);
+
+        string GetAccessTokenTeacher(TeacherPayload payload);
+        string GetRefreshTokenTeacher(TeacherPayload payload);
     }
 }

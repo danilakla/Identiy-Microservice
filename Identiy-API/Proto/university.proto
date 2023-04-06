@@ -2,13 +2,28 @@ syntax = "proto3";
 
 option csharp_namespace = "UniversityApi.Protos";
 package UniversityApi;
-
 service University{
 	rpc InitUniversity (ManagerRequest)  returns (ManagerRespone);
 	rpc GetManagerInfo (Email) returns (ManagerRespone);
 
+
+	rpc InitTeacher (TeacherRequest)  returns (TeacherResponse);
+	rpc GetTeacherInfo (Email)  returns (TeacherResponse);
+
+
 }
 
+message TeacherRequest{
+	string name=1;
+	string last_name=2;
+	string email=3;
+	int32 university_id=4;
+}
+message TeacherResponse{	
+int32 teacher_id=1;
+int32 university_id=2;
+
+}
 
 message ManagerRequest{
 	string name=1;
@@ -31,4 +46,5 @@ int32 manager_id=1;
 int32 university_id=2;
 
 }
+
 

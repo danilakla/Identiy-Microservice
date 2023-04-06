@@ -23,14 +23,14 @@ namespace Identiy_API.Services.TempSavingService
             this.mailService = mailService;
             this.mailMessage = mailMessage;
         }
-        public async Task TempRegistration<T>(T UserDto) where T: LoginDTO
+        public async Task TempRegistration<T>(T UserDto,string role) where T: LoginDTO
         {
             try
             {
                 var secretKey=crypto.EncryptSecretString(UserDto);
             bool flag= typeof(T)==typeof(CreateManagerDTO)?true:false;
                 await tempSaveDataService.SaveData(UserDto, secretKey);
-                var emailMessage = new EmailDto { To = UserDto.Email, Subject = "Confirm email", Body = mailMessage.BodyHtml(secretKey, flag) };
+                var emailMessage = new EmailDto { To = UserDto.Email, Subject = "Confirm email", Body = mailMessage.BodyHtml(secretKey, role) };
                 mailService.SendEmail(emailMessage);
                 
             }

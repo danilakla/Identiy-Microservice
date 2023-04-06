@@ -37,6 +37,7 @@ namespace Identiy_API.Controllers;
         {
 
             var user=await authenticationService.Login(loginDTO);
+            
             var ManagerIds=await universityService.GetManagerData(loginDTO);
             var managerPayload = new ManagerPayload { payloadManagerDTO = ManagerIds, Role = "Manager" };
             var accessToken = tokenServices.GetAccessTokenManager(managerPayload);
@@ -64,13 +65,7 @@ namespace Identiy_API.Controllers;
             throw;
         }
     }
-    [Authorize]
-    [HttpGet("/login-deanTEST")]
-    public IActionResult TEST()
-    {
 
-        return Ok();
-    }
     [HttpPost("/login-dean")]
     public async Task<IActionResult> LoginDean(LoginDTO loginDTO)
     {
@@ -81,6 +76,40 @@ namespace Identiy_API.Controllers;
             var ManagerIds = await deanService.GetDeanData(loginDTO);
              var accessToken = tokenServices.GetRefreshTokenDean(ManagerIds);
             var refreshToken = tokenServices.GetRefreshTokenDean(ManagerIds);
+            await authenticationService.SetRefreshToken(user, refreshToken);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            return Ok(new
+            {
+                Token = accessToken,
+                UserEmail = user.Email,
+            });
+
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
+
+    [HttpPost("/login-teacher")]
+    public async Task<IActionResult> LoginTeacher(LoginDTO loginDTO)
+    {
+        try
+        {
+
+            var user = await authenticationService.Login(loginDTO);
+            var ManagerIds = await universityService.GetTeacherData(loginDTO.Email);
+            var accessToken = tokenServices.GetAccessTokenTeacher(ManagerIds);
+            var refreshToken = tokenServices.GetRefreshTokenTeacher(ManagerIds);
             await authenticationService.SetRefreshToken(user, refreshToken);
 
             var cookieOptions = new CookieOptions
