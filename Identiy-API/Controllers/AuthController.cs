@@ -21,13 +21,21 @@ namespace Identiy_API.Controllers;
     private readonly ITokenServices tokenServices;
     private readonly IUniversityService universityService;
     private readonly IDeanService deanService;
+    private readonly IStudentService studentService;
 
-    public AuthenticationController(IAuthenticationService authenticationService, ITokenServices tokenServices, IUniversityService universityService, IDeanService deanService)
+    public AuthenticationController(
+        IAuthenticationService authenticationService,
+        ITokenServices tokenServices, 
+        IUniversityService universityService, 
+        IDeanService deanService,
+        IStudentService studentService
+        )
     {
         this.authenticationService = authenticationService;
         this.tokenServices = tokenServices;
         this.universityService = universityService;
         this.deanService = deanService;
+        this.studentService = studentService;
     }
 
     [HttpPost("/login-manager")]
@@ -133,5 +141,37 @@ namespace Identiy_API.Controllers;
             throw;
         }
     }
+    [HttpPost("/login-student")]
+    public async Task<IActionResult> LoginStudent(LoginDTO loginDTO)
+    {
+        try
+        {
 
+            var user = await authenticationService.Login(loginDTO);
+            var ManagerIds = await studentService.GetStudentData(loginDTO.Email);
+            var accessToken = tokenServices.GetAccessTokenStudent(ManagerIds);
+            var refreshToken = tokenServices.GetRefreshTokenStudent(ManagerIds);
+            await authenticationService.SetRefreshToken(user, refreshToken);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+            return Ok(new
+            {
+                Token = accessToken,
+                UserEmail = user.Email,
+            });
+
+
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+    }
 }
