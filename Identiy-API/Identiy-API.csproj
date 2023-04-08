@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Proto\dean.proto" />
+    <None Remove="Proto\student.proto" />
     <None Remove="Proto\university.proto" />
   </ItemGroup>
 
@@ -38,6 +39,9 @@
 
   <ItemGroup>
     <Protobuf Include="Proto\dean.proto" ProtoCompile="True" GrpcServices="Client" />
+    <Protobuf Include="Proto\student.proto" ProtoCompile="True" GrpcServices="Client">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Protobuf>
     <Protobuf Include="Proto\university.proto" ProtoCompile="True" GrpcServices="Client">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Protobuf>

@@ -1,5 +1,6 @@
 using Identiy_API.Data;
 using Identiy_API.Extensions;
+using Identiy_API.Infrastructure.AuthFactory.AuthAgregatorFactory;
 using Identiy_API.Services;
 using Identiy_API.Services.Authentication;
 using Identiy_API.Services.RegistrationService;
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ITokenServices, TokenServices>();
+builder.Services.AddScoped<IAgregatorAuthFactory, AgregatorAuthUser>();
+
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(configuration.GetConnectionString("connMSSQL")));
 builder.Services.AddStackExchangeRedisCache(redisOptions =>
 {

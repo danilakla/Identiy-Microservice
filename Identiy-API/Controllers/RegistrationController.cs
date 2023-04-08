@@ -1,8 +1,14 @@
 ﻿using Identiy_API.DTO;
 using Identiy_API.Model;
+using Identiy_API.Services.CryptograthyService;
+using Identiy_API.Services.RegistrationService;
+using Identiy_API.Services;
 using Identiy_API.Services.TempSavingService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Identiy_API.Services.UniversityService;
+using Identiy_API.Services.Caching;
+using Newtonsoft.Json.Linq;
 
 namespace Identiy_API.Controllers
 {
@@ -11,10 +17,24 @@ namespace Identiy_API.Controllers
     public class RegistrationController : ControllerBase
     {
         private readonly ITempRegistrationService tempRegistrationService;
+        private readonly ITokenServices tokenServices;
+        private readonly IRegistrationService registrationService;
+        private readonly ICrypto crypto;
+        private readonly IStudentService studentService;
 
-        public RegistrationController(ITempRegistrationService tempRegistrationService)
+        public RegistrationController(ITempRegistrationService tempRegistrationService,
+              ITokenServices tokenServices,
+            IRegistrationService registrationService,
+            ICrypto crypto,
+            IStudentService studentService
+            )
         {
             this.tempRegistrationService = tempRegistrationService;
+            this.tokenServices = tokenServices;
+            this.tokenServices = tokenServices;
+            this.registrationService = registrationService;
+            this.crypto = crypto;
+            this.studentService = studentService;
         }
 
         [HttpPost("/registr-manager/temp-saving")]
@@ -51,5 +71,41 @@ namespace Identiy_API.Controllers
             }
         }
 
+
+        [HttpPost("/registr-student")]
+        public async Task<IActionResult> RegistrationStudent([FromBody] RegistrationUserDTO registratioUserDTO)
+        {
+            try
+            {
+
+
+                var hasAccount = await registrationService.IsRegistration(registratioUserDTO.Email);
+
+                var data = crypto.DecryptSecretString<PayloadStudent>(registratioUserDTO.AuthenticationToken);
+                if (data.Role != "Student") throw new Exception("Is not correct role");
+                if (hasAccount)
+                {
+                    throw new Exception("User had account");
+                }
+                await registrationService.Registration(registratioUserDTO, "Student");
+
+                var userIds = await studentService.InitStudent(new() { GroupId=data.GroupId, loginDTO=registratioUserDTO});
+
+
+                return Redirect("https://www.youtube.com/");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public record class PayloadStudent
+        {
+            public int GroupId { get; set; }
+            public string   Role { get; set; }
+
+        }
     }
 }
