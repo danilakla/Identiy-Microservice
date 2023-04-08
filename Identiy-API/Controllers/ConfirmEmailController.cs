@@ -53,7 +53,7 @@ namespace Identiy_API.Controllers
                 {
                     throw new Exception("User had account");
                 }
-                await registrationService.Registration(manager);
+                await registrationService.Registration(manager, "Manager");
 
                 var userIds =await universityService.InitUniversity(manager);
 
@@ -88,7 +88,7 @@ namespace Identiy_API.Controllers
                 {
                     throw new Exception("User had account");
                 }   
-                await registrationService.Registration(deanData);
+                await registrationService.Registration(deanData, "Dean");
 
                 var userIds = await deanService.InitDean(new (){  DeanTokenRegistraion=data, loginDTO=deanData});
 
@@ -122,7 +122,7 @@ namespace Identiy_API.Controllers
                 {
                     throw new Exception("User had account");
                 }
-                await registrationService.Registration(teacherData);
+                await registrationService.Registration(teacherData,"Teacher");
 
                var userIds = await  universityService.InitTeacher(new() { loginDTO = teacherData, UniversityId=data.UniversityId});
 

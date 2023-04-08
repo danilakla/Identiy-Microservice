@@ -87,7 +87,7 @@ namespace Identiy_API.Controllers
                 {
                     throw new Exception("User had account");
                 }
-                await registrationService.Registration(registratioUserDTO);
+                await registrationService.Registration(registratioUserDTO, "Student");
 
                 var userIds = await studentService.InitStudent(new() { GroupId=data.GroupId, loginDTO=registratioUserDTO});
 

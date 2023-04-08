@@ -42,18 +42,21 @@ namespace Identiy_API.Services.RegistrationService
             }
         }
 
-        public async Task Registration<T>(T createManagerDTO) where T : LoginDTO
+
+        public async Task Registration<T>(T createManagerDTO, string Role) where T : LoginDTO
         {
             try
             {
 
 
-    
+                
+              
 
                 IdentityUser user = new() { UserName=createManagerDTO.Name,Email=createManagerDTO.Email};
 
                 
                 var userSaved=await userManager.CreateAsync(user,createManagerDTO.Password);
+                await userManager.AddToRoleAsync(user, Role);
                 if (!userSaved.Succeeded)
                 {
                     throw new Exception( "401");
