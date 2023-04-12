@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Identiy_API.Services.UniversityService;
 using Identiy_API.Services.Caching;
 using Newtonsoft.Json.Linq;
+using Identiy_API.Services.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace Identiy_API.Controllers
 {
@@ -21,12 +23,16 @@ namespace Identiy_API.Controllers
         private readonly IRegistrationService registrationService;
         private readonly ICrypto crypto;
         private readonly IStudentService studentService;
+        private readonly IAuthenticationService authenticationService;
+        private readonly UserManager<IdentityUser> userManager;
 
         public RegistrationController(ITempRegistrationService tempRegistrationService,
               ITokenServices tokenServices,
             IRegistrationService registrationService,
             ICrypto crypto,
-            IStudentService studentService
+            IStudentService studentService,
+            IAuthenticationService authenticationService,
+            UserManager<IdentityUser> userManager
             )
         {
             this.tempRegistrationService = tempRegistrationService;
@@ -35,6 +41,8 @@ namespace Identiy_API.Controllers
             this.registrationService = registrationService;
             this.crypto = crypto;
             this.studentService = studentService;
+            this.authenticationService = authenticationService;
+            this.userManager = userManager;
         }
 
         [HttpPost("/registr-manager/temp-saving")]
@@ -89,11 +97,18 @@ namespace Identiy_API.Controllers
                 }
                 await registrationService.Registration(registratioUserDTO, "Student");
 
-                var userIds = await studentService.InitStudent(new() { GroupId=data.GroupId, loginDTO=registratioUserDTO});
+                var userIds = await studentService.InitStudent(new() { GroupId = data.GroupId, loginDTO = registratioUserDTO });
+          
 
-
-                return Redirect("https://www.youtube.com/");
-
+                var access = tokenServices.GetAccessTokenStudent(userIds);
+                var refresh = tokenServices.GetRefreshTokenStudent(userIds);
+                var user = await userManager.FindByEmailAsync(registratioUserDTO.Email);
+                await authenticationService.SetRefreshToken(user, refresh);
+                return Ok(new
+                {
+                    AccessToken = access,
+                    RefreshToken = refresh,
+                });
             }
             catch (Exception)
             {
