@@ -89,11 +89,15 @@ namespace Identiy_API.Controllers
                 }
                 await registrationService.Registration(registratioUserDTO, "Student");
 
-                var userIds = await studentService.InitStudent(new() { GroupId=data.GroupId, loginDTO=registratioUserDTO});
+                var userIds = await studentService.InitStudent(new() { GroupId = data.GroupId, loginDTO = registratioUserDTO });
 
-
-                return Redirect("https://www.youtube.com/");
-
+                var access = tokenServices.GetAccessTokenStudent(userIds);
+                var refresh = tokenServices.GetRefreshTokenStudent(userIds);
+                return Ok(new
+                {
+                    AccessToken = access,
+                    RefreshToken = refresh,
+                });
             }
             catch (Exception)
             {
