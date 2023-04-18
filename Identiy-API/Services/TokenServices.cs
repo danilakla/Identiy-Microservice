@@ -24,7 +24,7 @@ namespace Identiy_API.Services
             _configuration = configuration;
         }
 
-        public string GetAccessTokenDean(DeanPayload payload)
+        public string GetAccessTokenDean(DeanPayload payload, string email)
         {
             try
             {
@@ -35,9 +35,11 @@ namespace Identiy_API.Services
                     new Claim("DeanId", payload.DeanId.ToString()),
                     new Claim("FacuiltieId", payload.FacultieId.ToString()),
                      new Claim("ProfileId", payload.DeanId.ToString()),
+										  new Claim("Email", email),
 
 
-                };
+
+				};
                 var token = new JwtSecurityTokenHandler().WriteToken(GenerateToken(DeanPayload, LIFE_TIME_TOKEN_HOUR));
                 return token;
             }
@@ -48,7 +50,7 @@ namespace Identiy_API.Services
             }
         }
 
-        public string GetAccessTokenManager(ManagerPayload payload)
+        public string GetAccessTokenManager(ManagerPayload payload, string email)
         {
             try
             {
@@ -58,8 +60,10 @@ namespace Identiy_API.Services
                     new Claim("UniversityId",payload.payloadManagerDTO.UniversityId.ToString()),
                     new Claim("ManagerId", payload.payloadManagerDTO.ManagerId.ToString()),
                      new Claim("ProfileId", payload.payloadManagerDTO.ManagerId.ToString()),
+															   new Claim("Email", email),
 
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
                 var token = GenerateToken(ManagerClaim, LIFE_TIME_TOKEN_HOUR);
                 var accToken = new JwtSecurityTokenHandler().WriteToken(token);
@@ -74,16 +78,16 @@ namespace Identiy_API.Services
         }
 
 
-        public string GetRefreshTokenDean(DeanPayload payload)
+        public string GetRefreshTokenDean(DeanPayload payload, string email)
         {
-            return GetAccessTokenDean(payload);
+            return GetAccessTokenDean(payload, email);
         }
 
-        public string GetRefreshTokenManager(ManagerPayload payload)
+        public string GetRefreshTokenManager(ManagerPayload payload,string email)
         {
             try
             {
-                return GetAccessTokenManager(payload);
+                return GetAccessTokenManager(payload,email);
             }
             catch (Exception)
             {
@@ -92,13 +96,13 @@ namespace Identiy_API.Services
             }
         }
 
-        public string GetRefreshTokenTeacher(TeacherPayload payload)
+        public string GetRefreshTokenTeacher(TeacherPayload payload, string email)
         {
-            return GetAccessTokenTeacher(payload);
+            return GetAccessTokenTeacher(payload,email);
         }
 
 
-        public string GetAccessTokenTeacher(TeacherPayload payload)
+        public string GetAccessTokenTeacher(TeacherPayload payload, string email)
         {
             try
             {
@@ -108,8 +112,9 @@ namespace Identiy_API.Services
                     new Claim("UniversityId",payload.UniversityId.ToString()),
                     new Claim("TeacherId", payload.TeacherId.ToString()),
                     new Claim("ProfileId", payload.TeacherId.ToString()),
+															  new Claim("Email", email),
 
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
                 var token = GenerateToken(ManagerClaim, LIFE_TIME_TOKEN_HOUR);
                 var accToken = new JwtSecurityTokenHandler().WriteToken(token);
@@ -144,7 +149,7 @@ namespace Identiy_API.Services
             
         }
 
-        public string GetAccessTokenStudent(StudentPayload payload)
+        public string GetAccessTokenStudent(StudentPayload payload, string email)
         {
             try
             {
@@ -157,8 +162,9 @@ namespace Identiy_API.Services
                     new Claim("ProfessionId", payload.ProfessionId.ToString()),
                     new Claim("StudentId", payload.StudentId.ToString()),
                     new Claim("ProfileId", payload.StudentId.ToString()),
+															  new Claim("Email", email),
 
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
                 var token = GenerateToken(studentClaims, LIFE_TIME_TOKEN_HOUR);
                 var accToken = new JwtSecurityTokenHandler().WriteToken(token);
@@ -171,9 +177,9 @@ namespace Identiy_API.Services
             }
         }
 
-        public string GetRefreshTokenStudent(StudentPayload payload)
+        public string GetRefreshTokenStudent(StudentPayload payload, string email)
         {
-            return GetAccessTokenStudent(payload);
+            return GetAccessTokenStudent(payload,email);
         }
     }
 }
