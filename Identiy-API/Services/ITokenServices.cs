@@ -7,16 +7,16 @@ namespace Identiy_API.Services
 {
     public interface ITokenServices
     {
-        string GetAccessTokenManager(ManagerPayload payload);
-        string GetRefreshTokenManager(ManagerPayload payload);
+        string GetAccessTokenManager(ManagerPayload payload, string email);
+        string GetRefreshTokenManager(ManagerPayload payload, string email);
 
-        string GetAccessTokenDean(DeanPayload payload);
-        string GetRefreshTokenDean(DeanPayload payload);
+        string GetAccessTokenDean(DeanPayload payload, string email);
+        string GetRefreshTokenDean(DeanPayload payload, string email);
 
-        string GetAccessTokenTeacher(TeacherPayload payload);
-        string GetRefreshTokenTeacher(TeacherPayload payload);
+        string GetAccessTokenTeacher(TeacherPayload payload, string email);
+        string GetRefreshTokenTeacher(TeacherPayload payload, string email);
 
-        string GetAccessTokenStudent(StudentPayload payload);
-        string GetRefreshTokenStudent(StudentPayload payload);
+        string GetAccessTokenStudent(StudentPayload payload, string email);
+        string GetRefreshTokenStudent(StudentPayload payload, string email);
     }
 }

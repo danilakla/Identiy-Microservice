@@ -100,8 +100,8 @@ namespace Identiy_API.Controllers
                 var userIds = await studentService.InitStudent(new() { GroupId = data.GroupId, loginDTO = registratioUserDTO });
           
 
-                var access = tokenServices.GetAccessTokenStudent(userIds);
-                var refresh = tokenServices.GetRefreshTokenStudent(userIds);
+                var access = tokenServices.GetAccessTokenStudent(userIds,registratioUserDTO.Email);
+                var refresh = tokenServices.GetRefreshTokenStudent(userIds, registratioUserDTO.Email);
                 var user = await userManager.FindByEmailAsync(registratioUserDTO.Email);
                 await authenticationService.SetRefreshToken(user, refresh);
                 return Ok(new

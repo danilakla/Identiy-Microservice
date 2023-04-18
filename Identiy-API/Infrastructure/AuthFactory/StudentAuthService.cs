@@ -20,8 +20,8 @@ namespace Identiy_API.Infrastructure.AuthFactory
         public async Task<JwtTokens> AuthenticateUser(LoginDTO loginDTO)
         {
             var ManagerIds = await studentService.GetStudentData(loginDTO.Email);
-            var accessToken = tokenServices.GetAccessTokenStudent(ManagerIds);
-            var refreshToken = tokenServices.GetRefreshTokenStudent(ManagerIds);
+            var accessToken = tokenServices.GetAccessTokenStudent(ManagerIds, loginDTO.Email);
+            var refreshToken = tokenServices.GetRefreshTokenStudent(ManagerIds, loginDTO.Email);
             return new JwtTokens { AccessToken = accessToken, RefreshToken = refreshToken };
         }
     }

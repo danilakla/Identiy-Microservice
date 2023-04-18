@@ -25,8 +25,8 @@ namespace Identiy_API.Infrastructure.AuthFactory
             {
                 var ManagerIds = await universityService.GetManagerData(loginDTO);
                 var managerPayload = new ManagerPayload { payloadManagerDTO = ManagerIds, Role = "Manager" };
-                var accessToken = tokenServices.GetAccessTokenManager(managerPayload);
-                var refreshToken = tokenServices.GetRefreshTokenManager(managerPayload);
+                var accessToken = tokenServices.GetAccessTokenManager(managerPayload, loginDTO.Email);
+                var refreshToken = tokenServices.GetRefreshTokenManager(managerPayload, loginDTO.Email);
                 return new JwtTokens { AccessToken= accessToken, RefreshToken = refreshToken };
 
             }
