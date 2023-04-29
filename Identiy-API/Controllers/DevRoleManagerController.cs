@@ -20,5 +20,35 @@ namespace Identiy_API.Controllers
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }
-    }
+
+
+		[HttpGet ("/test-cre")]
+		public async Task test()
+		{
+            try
+            {
+                testd();
+
+			}
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+		}
+        
+        private void testd()
+        {
+            try
+            {
+                throw new Exception("test message");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+	}
 }
